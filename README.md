@@ -159,6 +159,22 @@ Core beliefs behind Antiw8:
 
 Contributions welcome! Bias case studies, usage feedback, new framework suggestions, and translations are all appreciated. Feel free to open an Issue or PR.
 
+## Sibling Projects
+
+🧭 **[SteerW8-Harness](https://github.com/antiw8-dev/steerw8-harness)** — AI Orchestration Harness
+
+> **"Antiw8 sees the system. SteerW8-Harness steers it."**
+
+Antiw8 handles **seeing clearly** (bias defense / direction judgment). SteerW8-Harness handles **steering the execution** (task decomposition / tool routing / step-by-step verification / structured output). See clearly to stay unbiased; steer well to stay on track.
+
+🦅 **[Kestrel-Hover](https://github.com/antiw8-dev/kestrel-hover)** — Output-Layer Stabilization
+
+> **"Antiw8 sees the system. SteerW8 steers it. Kestrel holds it steady."**
+
+Kestrel handles **staying on target** during generation. It comes in two modes: Prompt Mode (behavioral self-check at uncertain points — copy-paste, works now) and Engine Mode (real fork-point detection via logit access — inference engine integration, roadmap). Hover before output.
+
+All three System Prompts work independently or combined — no conflicts. Use one, two, or all three together: **see clearly → steer firmly → hover steadily.**
+
 ## Disclaimer
 
 **Functional Disclaimer**: Antiw8 is a cognitive thinking aid. It does NOT provide investment advice, medical diagnosis, legal counsel, or any licensed professional recommendation. All analysis is for reference only.
