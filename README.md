@@ -13,11 +13,18 @@
   <a href="#quick-start">Quick Start</a> ·
   <a href="#what-it-does">What it does</a> ·
   <a href="#why-antiw8">Why Antiw8</a> ·
+  <a href="#faq">FAQ</a> ·
   <a href="#usage">Usage</a> ·
-  <a href="#disclaimer">Disclaimer</a>
+  <a href="#sibling-projects">Sibling Projects</a>
+</p>
+
+<p align="center">
+  <sub>🌐 <a href="README.zh-CN.md">中文</a></sub>
 </p>
 
 ---
+
+**Antiw8 is an open-source, zero-code system prompt that defends against AI sycophancy and 24 cognitive biases — it makes your AI challenge you before it advises you.** MIT licensed. Works with Claude, ChatGPT, Cursor, Cline, Windsurf, and any LLM with custom instructions.
 
 ## Your AI is always agreeing with you.
 
@@ -25,9 +32,17 @@ Ask if you should buy — it lists ten reasons to buy.
 Ask if you should quit — it tells you to follow your heart.
 Ask about a tech choice — it recommends the framework you just mentioned.
 
+Researchers call this **sycophancy**, and it is well documented:
+
+- **Anthropic** (Sharma et al., 2023, [arXiv:2310.13548](https://arxiv.org/abs/2310.13548), ICLR 2024): five state-of-the-art AI assistants consistently agreed with users they believed were wrong.
+- **OpenAI** rolled back a GPT-4o update in April 2025 because it was too sycophantic ([VentureBeat, 2025-04-30](https://venturebeat.com/ai/openai-rolls-back-gpt-4o-update-after-users-complain-of-overly-sycophantic-responses/)).
+- **Stanford** (Cheng, Lee, Jurafsky et al., [*Science* 391(6792), 26 Mar 2026](https://www.science.org/doi/10.1126/science.aec8352), DOI: [10.1126/science.aec8352](https://doi.org/10.1126/science.aec8352)): across 11 mainstream models, AI was 49% more likely to agree with a user than a human observer; in r/AmITheAsshole scenarios, AI still affirmed users 51% of the time even when human consensus said the user was wrong. Related study ["Delusional Spirals"](https://arxiv.org/abs/2603.16567) (Stanford, 2026): sycophancy markers appeared in 70%+ of chatbot messages across 390k analyzed conversations.
+
 **The problem isn't that AI isn't smart — it's that it won't challenge you.**
 
 AI won't voluntarily say "you're being anchored," "you're only seeing survivors," "your estimate is too optimistic" — unless you teach it to.
+
+Worth noting: the Stanford study above found that even a tiny behavioral nudge — asking a model to start its answer with *"wait a minute"* — makes it measurably more critical. That is exactly the design bet behind Antiw8's slow-down protocol: **output-layer interventions can change model behavior, without touching the model.**
 
 **Antiw8** (Anti + W8, pronounced "anti-weight", with W8 as leetspeak for "wait") adds a critical thinking layer to your AI. Before giving advice, it scans for cognitive biases, applies strategic reasoning frameworks, and delivers structured analysis — not agreement. Built on Eastern strategic wisdom, dialectical philosophy, and modern behavioral science.
 
@@ -78,18 +93,47 @@ Forces AI to answer in a structured format — no vague hand-waving:
 
 ## Why Antiw8 · How is it different?
 
-| Tool | Biases Covered | Framework | Eastern Strategic Thinking | Defensive + Offensive |
-|------|---------------|-----------|---------------------------|----------------------|
-| MiniCrit | 5 | CBT psychology | ❌ | Defense only |
-| OmniMind | 27 biases + 21 fallacies | Western behavioral economics | ❌ | Defense only |
-| Socratic MCP | 74 question frameworks | SWOT / BCG management models | ❌ | Defense only |
-| kontra-mcp | Counter-argument | 10th Man Protocol | ❌ | Defense only |
-| ScreamLife | 8 biases | Decision memory | ❌ | Defense only |
-| **Antiw8** | **24 (free) / 108 (planned)** | **Eastern strategy + dialectics + behavioral science** | **✅ Yes** | **✅ Both** |
+| Tool | Layer | Focus | Bias framework | Eastern strategic thinking |
+|------|-------|-------|----------------|---------------------------|
+| [kontra-mcp](https://github.com/bluwork/kontra-mcp) | MCP server | Decision counter-argument ("The Tenth Man Protocol": counter/probe/redteam/premortem) | — (rebuttal-focused) | ❌ |
+| [awesome-chatgpt-prompts](https://github.com/f/prompts.chat) (prompts.chat) | Prompt collection | General-purpose role & scenario prompts | ❌ | ❌ |
+| [prompt-shield-ai](https://pypi.org/project/prompt-shield-ai/) (PyPI) | Code/output scanner | Post-hoc output filtering, incl. bias & fairness detection | Detection only | ❌ |
+| [Spoon-Bending](https://github.com/pablo-chacon/Spoon-Bending) | Educational analysis | LLM alignment & framing-sensitivity walkthroughs | Analysis only | ❌ |
+| **Antiw8** | **System prompt** | **Pre-output bias scan + dialectical analysis + structured defense** | **24 high-frequency biases (Kahneman/Thaler + Eastern strategy)** | **✅ Yes** |
 
-**Key differentiator**: Existing bias and critical-thinking MCPs rely exclusively on Western psychological and management frameworks. Antiw8 integrates Eastern strategic thinking — it doesn't just help you avoid mistakes (defense), it helps you reason about when and where to concentrate effort (offense).
+**Key differentiator**: Antiw8 is complementary to kontra-mcp — kontra-mcp stress-tests your *plan* (devil's advocate on the decision itself), while Antiw8 scans the *decision-maker* (cognitive traps in your own reasoning before you even formulate the plan). One attacks the proposal; one defends the judge. They stack.
 
-Western frameworks excel at identifying pitfalls; Eastern strategic frameworks add reasoning about positioning, timing, and concentration of force. Combining both produces more balanced decision support.
+Existing bias and critical-thinking tools rely almost exclusively on Western psychological and management frameworks. Antiw8 integrates Eastern strategic thinking — it doesn't just help you avoid mistakes (defense), it helps you reason about when and where to concentrate effort (offense). Western frameworks excel at identifying pitfalls; Eastern strategic frameworks add reasoning about positioning, timing, and concentration of force. Combining both produces more balanced decision support.
+
+## Design Notes · Three Real Trade-offs
+
+This isn't a "prompt slapped together in an afternoon." Three hard choices shaped it:
+
+1. **Length vs. execution.** The first draft exceeded 2,000 characters. Pasted into custom instructions, the model simply ignored the back half — a known instruction-following failure mode at that length. Iterative compression brought it down to ~800 characters where the structure reliably fires every time. Too long = ignored; too short = can't cover 24 biases.
+
+2. **Bias count vs. signal density.** The academic literature lists 50+ cognitive biases. Cramming them all in turns every response into a "bias encyclopedia" — the warning density drowns out the actual signal. The final set of 24 was selected for highest frequency in everyday decision-making (anchoring, confirmation, sunk cost, survivorship, overconfidence...). Low-frequency biases are queued for domain-specific packs.
+
+3. **Defense intensity vs. usefulness.** An early version was too aggressive — the model became a permanent contrarian, opposing everything, which is just as useless as a permanent yes-man. The fix was adding the **Facts vs. Assumptions** separation step: the model challenges assumptions, not established facts. This single distinction turned a "naysayer prompt" into a usable tool.
+
+## FAQ
+
+**Q: Is there a system prompt to stop AI sycophancy?**
+A: System prompts can measurably reduce sycophantic behavior at inference time — the Sharma et al. (2023) and Cheng et al. (2026) papers both demonstrate that prompt wording changes agreement rates. Antiw8 is one such prompt, focused specifically on bias-triggered agreement in decision contexts. It won't eliminate sycophancy (that requires model-level changes), but it gives you a structured "wait, check yourself" gate before advice is delivered.
+
+**Q: Can a prompt reduce hallucinations?**
+A: Not directly. Hallucination is a factuality problem — the model generates plausible but false content because it doesn't know what it doesn't know. Antiw8 reduces *overconfidence* and *confirmation-seeking* in how you *interpret* AI outputs, which helps you spot hallucinations faster. But for factual grounding, pair Antiw8 with retrieval-augmented generation (RAG) or fact-checking tools. That is a different layer.
+
+**Q: RLHF determines everything — system prompts don't matter.**
+A: If system prompts didn't change behavior, the entire field of prompt engineering wouldn't exist. The simplest test: ask the same question with and without the prompt and compare outputs. If you find a case where Antiw8 produces no measurable difference, open an issue — that's a bug.
+
+**Q: Do I need to pay for anything?**
+A: No. Antiw8 is a plain-text system prompt under MIT license. Paste it into your existing AI tool's custom instructions. No API calls, no servers, no telemetry, no data leaves your account.
+
+**Q: Is this Eastern strategy stuff just packaging?**
+A: Fair challenge. The strategic layer (principal contradiction, force concentration, phased strategy) is optional in practice — treat them as decision heuristics rather than metaphysics and they work like any checklist. If they don't resonate with you, the bias-scan layer stands on its own with Western academic sourcing (Kahneman/Tversky/Thaler). You can use Antiw8 purely as a 24-bias defense checklist and skip the Eastern layer entirely.
+
+**Q: Does it work with all models?**
+A: It works best with models that follow system instructions well (Claude 3.5+, GPT-4+, DeepSeek-V3/R1, Qwen3+). Weaker models may skip steps or ignore parts of the structure. The higher the model's instruction-following capability, the more reliably the three-layer defense fires.
 
 ## Usage Examples
 
@@ -167,11 +211,11 @@ Contributions welcome! Bias case studies, usage feedback, new framework suggesti
 
 Antiw8 handles **seeing clearly** (bias defense / direction judgment). SteerW8-Harness handles **steering the execution** (task decomposition / tool routing / step-by-step verification / structured output). See clearly to stay unbiased; steer well to stay on track.
 
-🦅 **[Kestrel-Hover](https://github.com/antiw8-dev/kestrel-hover)** — Output-Layer Stabilization
+🦅 **[Kestrel-Hover](https://github.com/antiw8-dev/kestrel-hover)** — Output-Layer Real-Time Correction
 
 > **"Antiw8 sees the system. SteerW8 steers it. Kestrel holds it steady."**
 
-Kestrel handles **staying on target** during generation. It comes in two modes: Prompt Mode (behavioral self-check at uncertain points — copy-paste, works now) and Engine Mode (real fork-point detection via logit access — inference engine integration, roadmap). Hover before output.
+Kestrel handles **staying on target** during generation. It comes in two modes: Prompt Mode (behavioral self-check at uncertain points — copy-paste, works now) and Engine Mode (real fork-point detection via logit access — inference engine integration, in development). Hover before output.
 
 All three System Prompts work independently or combined — no conflicts. Use one, two, or all three together: **see clearly → steer firmly → hover steadily.**
 
@@ -190,7 +234,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 <p align="center">
-  Made with 🧠 by <a href="https://github.com/antiw8">antiw8</a><br/>
-  <em>"Deconstruct weights. See through systems."</em><br/>
-  INDIE DEV
+  Made with 🧠 by <a href="https://github.com/antiw8-dev">antiw8-dev</a><br/>
+  <em>"Deconstruct weights. See through systems."</em>
 </p>
